@@ -65,8 +65,8 @@ public class ESClient {
                 .execute()
                 .actionGet();
 
-        System.out.println("search response: " + response.toString());
-        System.out.println("search hits Total: " + response.getHits().totalHits());
+//        System.out.println("search response: " + response.toString());
+//        System.out.println("search hits Total: " + response.getHits().totalHits());
 
         long totalHits = response.getHits().totalHits();
         SearchHit[] hits = response.getHits().getHits();
@@ -78,7 +78,7 @@ public class ESClient {
         ArrayList<String> arrHits = new ArrayList<String>(20);
 
         for ( SearchHit hit : hits ) {
-            System.out.println("HIT: " + hit.getSourceAsString());
+//            System.out.println("HIT: " + hit.getSourceAsString());
             arrHits.add(hit.getSourceAsString());
 
 //            indexDocument("photos", hit.getSourceAsString());
@@ -92,10 +92,11 @@ public class ESClient {
         return arrHits;
     }
 
-    public int indexDocument( String index, String jsonStrDocument) {
+    public int indexDocument( String index, JSONObject jsonObjectDocument) {
+        System.out.println("indexDocument: " + index);
 
-        IndexResponse response = client.prepareIndex(index, index, "1")
-                .setSource(jsonStrDocument)
+        IndexResponse response = client.prepareIndex(index, index, jsonObjectDocument.getString("filename"))
+                .setSource(jsonObjectDocument.toString())
                 .get();
 
         return 0;
